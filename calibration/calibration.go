@@ -33,15 +33,27 @@ func GetDigitFromMatchedLocation(line string, loc []int) int {
 	return digit
 }
 
-func GetFirstAndLastNumbers(line string) (int, int) {
-
+func matchAllNumbers(line string) [][]int {
 	pattern := regexp.MustCompile(`(one|two|three|four|five|six|seven|eight|nine|[0-9])`)
-	locs := pattern.FindAllIndex([]byte(line), -1)
+	return pattern.FindAllIndex([]byte(line), -1)
+}
+
+func GetFirstAndLastNumbers(line string) (int, int) {
+	locs := matchAllNumbers(line)
 
 	firstMatch := locs[0]
 	lastMatch := locs[len(locs)-1]
 	first := GetDigitFromMatchedLocation(line, firstMatch)
-	last := GetDigitFromMatchedLocation(line, lastMatch)
+	var last = GetDigitFromMatchedLocation(line, lastMatch)
+
+	// Check the "rest" of the string for overlapping patterns
+	//  eg. "nineight" at the end, we will re-check "ineight", finding "eight"
+	//  that would have been missed on the first pass
+	substr := line[lastMatch[0]+1:len(line)]
+	laterMatches := matchAllNumbers(substr)
+	if laterMatches != nil {
+		last = GetDigitFromMatchedLocation(substr, laterMatches[0])
+	}
 
 	return first, last
 }
