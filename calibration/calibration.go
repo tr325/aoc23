@@ -8,17 +8,24 @@ import (
     "regexp"
 )
 
-func GetFirstAndLastNumbers(line string) (int, int) {
-	var first int
-	var last int
-
-    pattern := regexp.MustCompile(`(one|two|three|four|five|six|seven|eight|nine|[0-9])`)
-    loc := pattern.FindIndex([]byte(line))
-
+func GetDigitFromMatchedLocation(line string, loc []int) int {
+    var digit int
     if (loc[0] == loc[1]-1) {
         // Digit found
-        first, _ = strconv.Atoi(string(line[loc[0]:loc[1]]))
+        digit, _ = strconv.Atoi(string(line[loc[0]:loc[1]]))
     }
+    return digit
+}
+
+func GetFirstAndLastNumbers(line string) (int, int) {
+
+    pattern := regexp.MustCompile(`(one|two|three|four|five|six|seven|eight|nine|[0-9])`)
+    locs := pattern.FindAllIndex([]byte(line), -1)
+
+    firstMatch := locs[0]
+    lastMatch := locs[len(locs)-1]
+    first := GetDigitFromMatchedLocation(line, firstMatch)
+    last := GetDigitFromMatchedLocation(line, lastMatch)
 
 	return first, last
 }
