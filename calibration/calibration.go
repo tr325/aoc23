@@ -5,27 +5,20 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"strings"
+    "regexp"
 )
 
 func GetFirstAndLastNumbers(line string) (int, int) {
-	var first = -1
-	var last = -1
+	var first int
+	var last int
 
-	s := bufio.NewScanner(strings.NewReader(line))
-	s.Split(bufio.ScanRunes)
+    pattern := regexp.MustCompile(`(one|two|three|four|five|six|seven|eight|nine|[0-9])`)
+    loc := pattern.FindIndex([]byte(line))
 
-	for s.Scan() {
-		i, err := strconv.Atoi(s.Text())
-		if err != nil {
-			// ignore
-		} else {
-			if first == -1 {
-				first = i
-			}
-			last = i
-		}
-	}
+    if (loc[0] == loc[1]-1) {
+        // Digit found
+        first, _ = strconv.Atoi(string(line[loc[0]:loc[1]]))
+    }
 
 	return first, last
 }
