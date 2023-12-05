@@ -4,28 +4,44 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"regexp"
 	"strconv"
-    "regexp"
 )
 
 func GetDigitFromMatchedLocation(line string, loc []int) int {
-    var digit int
-    if (loc[0] == loc[1]-1) {
-        // Digit found
-        digit, _ = strconv.Atoi(string(line[loc[0]:loc[1]]))
-    }
-    return digit
+	var myMap = map[string]int{
+		"one":   1,
+		"two":   2,
+		"three": 3,
+		"four":  4,
+		"five":  5,
+		"six":   6,
+		"seven": 7,
+		"eight": 8,
+		"nine":  9,
+	}
+
+	var digit int
+
+	substr := string(line[loc[0]:loc[1]])
+	if loc[0] == loc[1]-1 {
+		// Digit found
+		digit, _ = strconv.Atoi(substr)
+	} else {
+		digit = myMap[substr]
+	}
+	return digit
 }
 
 func GetFirstAndLastNumbers(line string) (int, int) {
 
-    pattern := regexp.MustCompile(`(one|two|three|four|five|six|seven|eight|nine|[0-9])`)
-    locs := pattern.FindAllIndex([]byte(line), -1)
+	pattern := regexp.MustCompile(`(one|two|three|four|five|six|seven|eight|nine|[0-9])`)
+	locs := pattern.FindAllIndex([]byte(line), -1)
 
-    firstMatch := locs[0]
-    lastMatch := locs[len(locs)-1]
-    first := GetDigitFromMatchedLocation(line, firstMatch)
-    last := GetDigitFromMatchedLocation(line, lastMatch)
+	firstMatch := locs[0]
+	lastMatch := locs[len(locs)-1]
+	first := GetDigitFromMatchedLocation(line, firstMatch)
+	last := GetDigitFromMatchedLocation(line, lastMatch)
 
 	return first, last
 }
