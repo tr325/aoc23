@@ -71,3 +71,16 @@ func TestGetGameImpossibleTooManyBlue(t *testing.T) {
 		t.Error("Game is impossible (too many blue) but wasn't reported as such")
 	}
 }
+
+// ------------------------------------------------
+// Part 2
+
+func TestGetGamePower(t *testing.T) {
+	gameScore := "4 blue, 1 green, 2 red; 5 red, 3 blue, 6 green; 2 green, 3 blue;"
+	want := 120
+
+	got := GetGamePower(gameScore)
+	if got != want {
+		t.Errorf("Got incorrect game power. Got: %d\n", got)
+	}
+}
