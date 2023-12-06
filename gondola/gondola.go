@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"regexp"
+	"strconv"
 )
 
 type Part struct {
@@ -46,9 +48,32 @@ func main() {
 	fileScanner := bufio.NewScanner(readFile)
 	fileScanner.Split(bufio.ScanLines)
 
-	var partNumbersSum = 0
+	numberFinder := regexp.MustCompile(`[0-9]*`)
+	symbolFinder := regexp.MustCompile(`[^A-Za-z0-9\.]`)
+
+	var row = 0
+	parts := []Part{}
+	symbolLocations := []SymbolLocation{}
 	for fileScanner.Scan() {
-		
+		line := fileScanner.Text()
+		numbers := numberFinder.FindAllString(line, -1)
+		numberLocs := numberFinder.FindAllStringIndex(line, -1)
+		symbols := symbolFinder.FindAllStringIndex(line, -1)
+		for i, num := range numbers {
+			number, _ := strconv.Atoi(num)
+			parts = append(parts, Part{number, row, numberLocs[i][0], numberLocs[i][1]-1})
+		}
+		for _, loc := range symbols {
+			symbolLocations = append(symbolLocations, SymbolLocation{row, loc[0]})
+		}
+		row = row + 1
+	}
+
+	var partNumbersSum = 0
+	for _, part := range parts {
+		if IsPartNumberRelevant(part, symbolLocations) {
+			partNumbersSum = partNumbersSum + part.number
+		}
 	}
 
 	fmt.Printf("Sum of all the active part numbers: %d\n", partNumbersSum)
