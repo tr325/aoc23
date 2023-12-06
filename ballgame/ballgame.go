@@ -13,8 +13,32 @@ func GetIdForGame(gameTitle string) (int, error) {
 	return strconv.Atoi(gameNumber)
 }
 
-func GamePossible(gameRecord string) bool {
-	// TODO
+func IsHandfulPossible(handful string) bool {
+	limits := map[string]int{
+		"red": 12,
+		"green": 13,
+		"blue": 14,
+	}
+
+	hh := strings.Replace(handful, ";", "", -1)
+	cubes := strings.Split(hh, ", ")
+	for _, c := range cubes {
+		totAndColour := strings.Split(c, " ")
+		total, _ := strconv.Atoi(totAndColour[0])
+		if total > limits[totAndColour[1]] {
+			return false
+		}
+	}
+	return true
+}
+
+func IsGamePossible(gameScore string) bool {
+	handfuls := strings.Split(gameScore, "; ")
+	for _, h := range handfuls {
+		if !IsHandfulPossible(h) {
+			return false
+		}
+	}
 	return true
 }
 
@@ -30,7 +54,7 @@ func main() {
 	for fileScanner.Scan() {
 		gameRecord := fileScanner.Text()
 		idAndGame := strings.Split(gameRecord, ": ")
-		validresult := GamePossible(idAndGame[1])
+		validresult := IsGamePossible(idAndGame[1])
 		if validresult == true {
 			id, _ := GetIdForGame(idAndGame[0])
 			sum = sum + id
