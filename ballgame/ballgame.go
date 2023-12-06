@@ -21,7 +21,6 @@ func GamePossible(gameRecord string) bool {
 	return true
 }
 
-
 func main() {
 	readFile, _ := os.Open("ballgame.txt")
 

@@ -1,6 +1,8 @@
 package main
 
-import ("testing")
+import (
+	"testing"
+)
 
 func TestGetIdFromGameRecord(t *testing.T) {
 	gameRecord := "Game 13: 2 green, 2 red, 3 blue; 3 blue, 3 red, 3 green;"
