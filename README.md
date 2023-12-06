@@ -1,5 +1,6 @@
 # AOC 23
 
+(Advent of Code)[https://adventofcode.com/].
 Playing with Go this year.
 
 ## Day 1 problem statement:
