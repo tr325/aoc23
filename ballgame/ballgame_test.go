@@ -5,7 +5,7 @@ import (
 )
 
 func TestGetIdFromGameRecord(t *testing.T) {
-	gameRecord := "Game 13: 2 green, 2 red, 3 blue; 3 blue, 3 red, 3 green;"
+	gameRecord := "Game 13"
 	want := 13
 
 	got, _ := GetIdForGame(gameRecord)

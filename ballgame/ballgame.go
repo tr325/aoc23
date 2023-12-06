@@ -4,15 +4,12 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"regexp"
 	"strconv"
 	"strings"
 )
 
-func GetIdForGame(gameRecord string) (int, error) {
-	pattern := regexp.MustCompile(`Game \d\d`)
-	substr := pattern.Find([]byte(gameRecord))
-	gameNumber := strings.Replace(string(substr), "Game ", "", -1)
+func GetIdForGame(gameTitle string) (int, error) {
+	gameNumber := strings.Replace(gameTitle, "Game ", "", -1)
 	return strconv.Atoi(gameNumber)
 }
 
@@ -32,9 +29,10 @@ func main() {
 	var sum = 0
 	for fileScanner.Scan() {
 		gameRecord := fileScanner.Text()
-		validresult := GamePossible(gameRecord)
+		idAndGame := strings.Split(gameRecord, ": ")
+		validresult := GamePossible(idAndGame[1])
 		if validresult == true {
-			id, _ := GetIdForGame(gameRecord)
+			id, _ := GetIdForGame(idAndGame[0])
 			sum = sum + id
 		}
 	}
