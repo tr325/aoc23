@@ -12,3 +12,6 @@ On each line of `calibration.txt`, the "calibration value" for that row can be f
 1. How many of the inputs are possible if there are 12 Red, 13 Green, and 14 Blue balls total. Find the sum of their IDs.
 2. Then, for each game, find the minimum number of balls possible for each colour, multiply those numbers together, and sum the results.
 
+## Day 3 problem statement:
+
+1. All numbers adjacent to a non-`.`-symbol are relevant engine parts. What's the sum of those numbers?
