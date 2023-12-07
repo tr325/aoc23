@@ -13,7 +13,7 @@ func TestParseLine(t *testing.T) {
 
 	ParseLine(line, &parts, &symbols, row)
 	if len(parts) != 1 {
-		t.Error("Failed to find part")
+		t.Errorf("Found incorrect number of parts. Got: %d\n", len(parts))
 	}
 	if parts[0].row != row {
 		t.Errorf("Part placed in wrong row. got: %d\n", parts[0].row)

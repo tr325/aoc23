@@ -41,7 +41,7 @@ func parse(fileScanner *bufio.Scanner) ([]Part, []SymbolData) {
 }
 
 func ParseLine(line string, parts *[]Part, symbolData *[]SymbolData, row int) {
-	numberFinder := regexp.MustCompile(`[0-9]*`)
+	numberFinder := regexp.MustCompile(`[0-9]+`)
 	symbolFinder := regexp.MustCompile(`[^A-Za-z0-9\.]`)
 
 	numbers := numberFinder.FindAllString(line, -1)
@@ -132,7 +132,6 @@ func main() {
 
 		AddAdjacentParts(&symbol, parts)
 		if IsGear(symbol) {
-			fmt.Println("found a gear")
 			gearRatiosSum = gearRatiosSum + GetGearRatio(symbol)
 		}
 	}
