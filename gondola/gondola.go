@@ -6,6 +6,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"github.com/samber/lo"
 )
 
 type Part struct {
@@ -26,29 +27,31 @@ type SymbolData struct {
 	location      SymbolLocation
 }
 
-func parse(fileScanner *bufio.Scanner) ([]Part, []SymbolLocation) {
+func parse(fileScanner *bufio.Scanner) ([]Part, []SymbolData) {
 	numberFinder := regexp.MustCompile(`[0-9]*`)
 	symbolFinder := regexp.MustCompile(`[^A-Za-z0-9\.]`)
 
 	var row = 0
 	parts := []Part{}
-	symbolLocations := []SymbolLocation{}
+	symbolData := []SymbolData{}
 	for fileScanner.Scan() {
 		line := fileScanner.Text()
 		numbers := numberFinder.FindAllString(line, -1)
 		numberLocs := numberFinder.FindAllStringIndex(line, -1)
-		// TODO: symbols := symbolFinder.FindAllString()
-		symbols := symbolFinder.FindAllStringIndex(line, -1)
+		symbols := symbolFinder.FindAllString(line, -1)
+		symbolLocations := symbolFinder.FindAllStringIndex(line, -1)
 		for i, num := range numbers {
 			number, _ := strconv.Atoi(num)
 			parts = append(parts, Part{number, row, numberLocs[i][0], numberLocs[i][1] - 1})
 		}
-		for _, loc := range symbols {
-			symbolLocations = append(symbolLocations, SymbolLocation{row, loc[0]})
+		for j, loc := range symbolLocations {
+			location := SymbolLocation{row, loc[0]}
+			data := SymbolData{[]Part{}, symbols[j], location}
+			symbolData = append(symbolData, data)
 		}
 		row = row + 1
 	}
-	return parts, symbolLocations
+	return parts, symbolData
 }
 
 func abs(x int) int {
@@ -79,7 +82,10 @@ func main() {
 	fileScanner := bufio.NewScanner(readFile)
 	fileScanner.Split(bufio.ScanLines)
 
-	parts, symbolLocations := parse(fileScanner)
+	parts, symbols := parse(fileScanner)
+	symbolLocations := lo.Map(symbols, func(s SymbolData, _ int) SymbolLocation {
+	    return s.location
+	})
 
 	var partNumbersSum = 0
 	for _, part := range parts {
