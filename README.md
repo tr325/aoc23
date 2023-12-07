@@ -15,3 +15,4 @@ On each line of `calibration.txt`, the "calibration value" for that row can be f
 ## Day 3 problem statement:
 
 1. All numbers adjacent to a non-`.`-symbol are relevant engine parts. What's the sum of those numbers?
+2. Gears are `*` symbols that are adjacent to exactly two engine parts. Their ratio is the multiple of those two parts. Find the sum of all gear ratios in the engine.

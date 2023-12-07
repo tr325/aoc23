@@ -5,8 +5,8 @@ import (
 )
 
 func TestPartWithinWidthIsRelevant(t *testing.T) {
-	part := Part{123, 4, 3, 5,}
-	symbolLocation := SymbolLocation{3, 4,}
+	part := Part{123, 4, 3, 5}
+	symbolLocation := SymbolLocation{3, 4}
 
 	if !IsPartNumberRelevant(part, []SymbolLocation{symbolLocation}) {
 		t.Error("Failed to find within width symbol")
@@ -14,8 +14,8 @@ func TestPartWithinWidthIsRelevant(t *testing.T) {
 }
 
 func TestPartOneLeftOfWidthIsRelevant(t *testing.T) {
-	part := Part{123, 4, 3, 5,}
-	symbolLocation := SymbolLocation{3, 2,}
+	part := Part{123, 4, 3, 5}
+	symbolLocation := SymbolLocation{3, 2}
 
 	if !IsPartNumberRelevant(part, []SymbolLocation{symbolLocation}) {
 		t.Error("Failed to find symbol left of part")
@@ -23,8 +23,8 @@ func TestPartOneLeftOfWidthIsRelevant(t *testing.T) {
 }
 
 func TestPartOneRightOfWidthIsRelevant(t *testing.T) {
-	part := Part{123, 4, 3, 5,}
-	symbolLocation := SymbolLocation{3, 6,}
+	part := Part{123, 4, 3, 5}
+	symbolLocation := SymbolLocation{3, 6}
 
 	if !IsPartNumberRelevant(part, []SymbolLocation{symbolLocation}) {
 		t.Error("Failed to find symbol right of part")
@@ -32,8 +32,8 @@ func TestPartOneRightOfWidthIsRelevant(t *testing.T) {
 }
 
 func TestPartTwoRightOfWidthIsNotRelevant(t *testing.T) {
-	part := Part{123, 4, 3, 5,}
-	symbolLocation := SymbolLocation{3, 7,}
+	part := Part{123, 4, 3, 5}
+	symbolLocation := SymbolLocation{3, 7}
 
 	if IsPartNumberRelevant(part, []SymbolLocation{symbolLocation}) {
 		t.Error("Included number two left of symbol")
@@ -41,8 +41,8 @@ func TestPartTwoRightOfWidthIsNotRelevant(t *testing.T) {
 }
 
 func TestPartTwoLeftOfWidthIsNotRelevant(t *testing.T) {
-	part := Part{123, 4, 3, 5,}
-	symbolLocation := SymbolLocation{3, 1,}
+	part := Part{123, 4, 3, 5}
+	symbolLocation := SymbolLocation{3, 1}
 
 	if IsPartNumberRelevant(part, []SymbolLocation{symbolLocation}) {
 		t.Error("Included number two right of symbol")
@@ -50,8 +50,8 @@ func TestPartTwoLeftOfWidthIsNotRelevant(t *testing.T) {
 }
 
 func TestPartTwoBelowIsNotRelevant(t *testing.T) {
-	part := Part{123, 4, 3, 5,}
-	symbolLocation := SymbolLocation{2, 4,}
+	part := Part{123, 4, 3, 5}
+	symbolLocation := SymbolLocation{2, 4}
 
 	if IsPartNumberRelevant(part, []SymbolLocation{symbolLocation}) {
 		t.Error("Included number two below symbol")
@@ -59,11 +59,13 @@ func TestPartTwoBelowIsNotRelevant(t *testing.T) {
 }
 
 func TestPartTwoAboveIsNotRelevant(t *testing.T) {
-	part := Part{123, 4, 3, 5,}
-	symbolLocation := SymbolLocation{6, 4,}
+	part := Part{123, 4, 3, 5}
+	symbolLocation := SymbolLocation{6, 4}
 
 	if IsPartNumberRelevant(part, []SymbolLocation{symbolLocation}) {
 		t.Error("Included number two above symbol")
 	}
 }
 
+// ------------------------------------------------------------
+// Part 2
