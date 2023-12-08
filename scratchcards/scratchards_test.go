@@ -7,14 +7,10 @@ import (
 
 func TestParseLine(t *testing.T) {
 	line := "Card 123: 44 22 11 | 11 22 33"
-	id := 123
 	winning := []int{44, 22, 11}
 	mine := []int{11, 22, 33}
 
 	card := ParseLine(line)
-	if card.id != id {
-		t.Errorf("Parsed card id incorrectly. Got: %d\n", card.id)
-	}
 	if !cmp.Equal(card.winningNumbers, winning) {
 		t.Error("Failed to parse winning numbers")
 	}
@@ -27,7 +23,7 @@ func TestParseLine(t *testing.T) {
 // Part 1
 
 func TestFindScoreSingleMatch(t *testing.T) {
-	card := Card{1, []int{1, 2, 3}, []int{2, 5, 6}, 0, 1}
+	card := Card{[]int{1, 2, 3}, []int{2, 5, 6}, 0, 1}
 	want := 1
 
 	got := FindScore(&card)
@@ -37,7 +33,7 @@ func TestFindScoreSingleMatch(t *testing.T) {
 }
 
 func TestFindScoreAddsMatchesToCard(t *testing.T) {
-	card := Card{1, []int{1, 2, 3}, []int{2, 5, 6}, 0, 1}
+	card := Card{[]int{1, 2, 3}, []int{2, 5, 6}, 0, 1}
 	want := 1
 
 	FindScore(&card)
@@ -48,7 +44,7 @@ func TestFindScoreAddsMatchesToCard(t *testing.T) {
 }
 
 func TestFindScoreNoMatch(t *testing.T) {
-	card := Card{1, []int{1, 2, 3}, []int{12, 5, 6}, 0, 1}
+	card := Card{[]int{1, 2, 3}, []int{12, 5, 6}, 0, 1}
 	want := 0
 
 	got := FindScore(&card)
@@ -58,7 +54,7 @@ func TestFindScoreNoMatch(t *testing.T) {
 }
 
 func TestFindScoreMultipleMatches(t *testing.T) {
-	card := Card{1, []int{1, 2, 3}, []int{2, 3, 3, 5}, 0, 1}
+	card := Card{[]int{1, 2, 3}, []int{2, 3, 3, 5}, 0, 1}
 	want := 4
 
 	got := FindScore(&card)
@@ -72,8 +68,8 @@ func TestFindScoreMultipleMatches(t *testing.T) {
 
 func TestAddingSingleMatch(t *testing.T) {
 	cards := []*Card{
-		&Card{1, []int{}, []int{}, 1, 1},
-		&Card{2, []int{}, []int{}, 0, 1},
+		&Card{[]int{}, []int{}, 1, 1},
+		&Card{[]int{}, []int{}, 0, 1},
 	}
 	want := 2
 
@@ -86,8 +82,8 @@ func TestAddingSingleMatch(t *testing.T) {
 
 func TestAddingSingleMatchForMultipleOriginals(t *testing.T) {
 	cards := []*Card{
-		&Card{1, []int{}, []int{}, 1, 2},
-		&Card{2, []int{}, []int{}, 0, 1},
+		&Card{[]int{}, []int{}, 1, 2},
+		&Card{[]int{}, []int{}, 0, 1},
 	}
 	want := 3 // 2 copies of [0], 1 match --> 1 original of [1] + 2
 
@@ -100,9 +96,9 @@ func TestAddingSingleMatchForMultipleOriginals(t *testing.T) {
 
 func TestAddingMultipleMatches(t *testing.T) {
 	cards := []*Card{
-		&Card{1, []int{}, []int{}, 2, 1},
-		&Card{2, []int{}, []int{}, 0, 1},
-		&Card{2, []int{}, []int{}, 0, 1},
+		&Card{[]int{}, []int{}, 2, 1},
+		&Card{[]int{}, []int{}, 0, 1},
+		&Card{[]int{}, []int{}, 0, 1},
 	}
 	want := 2
 
@@ -119,9 +115,9 @@ func TestAddingMultipleMatches(t *testing.T) {
 
 func TestAddingSequentialMatches(t *testing.T) {
 	cards := []*Card{
-		&Card{1, []int{}, []int{}, 2, 1},
-		&Card{2, []int{}, []int{}, 1, 1},
-		&Card{2, []int{}, []int{}, 0, 1},
+		&Card{[]int{}, []int{}, 2, 1},
+		&Card{[]int{}, []int{}, 1, 1},
+		&Card{[]int{}, []int{}, 0, 1},
 	}
 	// 2 matches in [0] -> 2 copies of [1] and [2]
 	// (1 match in [1]) * 2 copies --> 2 more copies of [2] --> 4 copies of [2]

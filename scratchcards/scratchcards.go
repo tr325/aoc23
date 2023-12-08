@@ -12,7 +12,6 @@ import (
 )
 
 type Card struct {
-	id             int
 	winningNumbers []int
 	myNumbers      []int
 	matches        int
@@ -41,12 +40,8 @@ func parseNumberList(list string) []int {
 
 func ParseLine(line string) *Card {
 	idAndGame := strings.Split(line, ":")
-	idStr := strings.Replace(idAndGame[0], "Card ", "", -1)
-	id, _ := strconv.Atoi(idStr)
-
 	numberLists := strings.Split(idAndGame[1], "|")
 	return &Card{
-		id,
 		parseNumberList(numberLists[0]),
 		parseNumberList(numberLists[1]),
 		0,
