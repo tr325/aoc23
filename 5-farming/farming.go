@@ -10,9 +10,9 @@ import (
 )
 
 type Mappe struct {
-	directives []Directive
 	source     string
 	desination string
+	directives []Directive
 }
 
 type Directive struct {
@@ -38,9 +38,9 @@ func parse(fileScanner *bufio.Scanner) ([]int, map[string]Mappe) {
 		} else if mappeTitleLine.MatchString(line) {
 			source, destination := ParseMappeTitleLine(line)
 			currentMappe = Mappe{
-				[]Directive{},
 				source,
 				destination,
+				[]Directive{},
 			}
 		} else if mappeDirectiveLine.MatchString(line) {
 			source, destination, length := ParseMappeDirectiveLine(line)
@@ -93,6 +93,21 @@ func ParseMappeDirectiveLine(line string) (int, int, int) {
 
 // ------------------------------------------------------------
 // Part 1
+
+func FindMappedValue(mappe Mappe, input int) int {
+	for _, directive := range mappe.directives {
+		if input > directive.sourceRangeStart &&
+			input < directive.sourceRangeStart + directive.rangeLength {
+			return directive.destinationRangeStart + (input - directive.sourceRangeStart)
+		}
+	}
+	return input
+}
+
+func FindLocationForSeed(mapOfMappes map[string]Mappe, seed int) int {
+	// TODO
+	return 1
+}
 
 // ------------------------------------------------------------
 // Part 2

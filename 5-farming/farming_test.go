@@ -50,5 +50,71 @@ func TestParseMappeDirectiveLine(t *testing.T) {
 // ------------------------------------------------------------
 // Part 1
 
+func TestFindMappedValueInRange(t *testing.T) {
+	mappe := Mappe{
+		"", "",
+		[]Directive{
+			Directive{14, 12, 5},
+			Directive{5, 7, 5},
+			Directive{22, 3, 4},
+		},
+	}
+	input := 9
+	want := 11
+
+	got := FindMappedValue(mappe, input)
+	if got != want {
+		t.Errorf("Mapping within directive range incorrect. Got: %d\n", got)
+	}
+}
+
+func TestFindMappedValueOutsideRange(t *testing.T) {
+	mappe := Mappe{
+		"", "",
+		[]Directive{
+			Directive{14, 12, 5},
+			Directive{5, 7, 5},
+			Directive{22, 3, 4},
+		},
+	}
+	input := 2
+	want := 2
+
+	got := FindMappedValue(mappe, input)
+	if got != want {
+		t.Errorf("Default mapping (value outside of directive ranges) incorrect. Got: %d\n", got)
+	}
+}
+
+func TestFindMultiplyMappedValue(t *testing.T) {
+	mappe1 := Mappe{
+		"a", "b",
+		[]Directive{
+			Directive{14, 12, 5},
+			Directive{5, 7, 5},
+			Directive{22, 3, 4},
+		},
+	}
+	mappe2 := Mappe{
+		"b", "c",
+		[]Directive{
+			Directive{14, 10, 5},
+			Directive{5, 7, 3},
+			Directive{22, 3, 4},
+		},
+	}
+	mapOfMappes := map[string]Mappe{
+		"b": mappe2,
+		"a": mappe1,
+	}
+	input := 16
+	want := 10
+
+	got := FindLocationForSeed(mapOfMappes, input)
+	if got != want {
+		t.Errorf("Mapping through two mappes incorrect. Got: %d\n", got)
+	}
+}
+
 // ------------------------------------------------------------
 // Part 2
