@@ -2,7 +2,9 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"github.com/samber/lo"
+	"log"
 	"os"
 	"regexp"
 	"strconv"
@@ -10,9 +12,9 @@ import (
 )
 
 type Mappe struct {
-	source     string
-	desination string
-	directives []Directive
+	source      string
+	destination string
+	directives  []Directive
 }
 
 type Directive struct {
@@ -43,7 +45,7 @@ func parse(fileScanner *bufio.Scanner) ([]int, map[string]Mappe) {
 				[]Directive{},
 			}
 		} else if mappeDirectiveLine.MatchString(line) {
-			source, destination, length := ParseMappeDirectiveLine(line)
+			destination, source, length := ParseMappeDirectiveLine(line)
 			directive := Directive{
 				source,
 				destination,
@@ -94,19 +96,43 @@ func ParseMappeDirectiveLine(line string) (int, int, int) {
 // ------------------------------------------------------------
 // Part 1
 
-func FindMappedValue(mappe Mappe, input int) int {
+func MapValue(mappe Mappe, input int) int {
 	for _, directive := range mappe.directives {
-		if input > directive.sourceRangeStart &&
-			input < directive.sourceRangeStart + directive.rangeLength {
+		if input >= directive.sourceRangeStart &&
+			input <= directive.sourceRangeStart+directive.rangeLength {
 			return directive.destinationRangeStart + (input - directive.sourceRangeStart)
 		}
 	}
 	return input
 }
 
-func FindLocationForSeed(mapOfMappes map[string]Mappe, seed int) int {
-	// TODO
-	return 1
+func FindMappedValue(mapOfMappes map[string]Mappe, seed int, start string, end string) int {
+	var nextSource = start
+	var mappedValue = seed
+	limit := 100 // Safety
+	for i := 0; i < limit; i++ {
+		mappe := mapOfMappes[nextSource]
+		mappedValue = MapValue(mappe, mappedValue)
+		nextSource = mappe.destination
+
+		if nextSource == end {
+			break
+		}
+		if i == limit-1 {
+			log.Fatal("Hit safety limit searching for mapped value")
+		}
+	}
+	return mappedValue
+}
+
+func FindLowest(values []int) int {
+	return lo.Reduce(values, func(agg int, loc int, _ int) int {
+		if agg < loc {
+			return agg
+		} else {
+			return loc
+		}
+	}, 999999999999999)
 }
 
 // ------------------------------------------------------------
@@ -122,7 +148,12 @@ func main() {
 	fileScanner := bufio.NewScanner(readFile)
 	fileScanner.Split(bufio.ScanLines)
 
-	// seeds, mapOfMappes := parse(fileScanner)
+	seeds, mapOfMappes := parse(fileScanner)
 
-	// fmt.Printf("Lowest location number for initial seeds: %d\n", lowestLocation)
+	locations := lo.Map(seeds, func(s int, _ int) int {
+		return FindMappedValue(mapOfMappes, s, "seed", "location")
+	})
+	lowestLocation := FindLowest(locations)
+
+	fmt.Printf("Lowest location number for initial seeds: %d\n", lowestLocation)
 }

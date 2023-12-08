@@ -50,7 +50,7 @@ func TestParseMappeDirectiveLine(t *testing.T) {
 // ------------------------------------------------------------
 // Part 1
 
-func TestFindMappedValueInRange(t *testing.T) {
+func TestMapValueInRange(t *testing.T) {
 	mappe := Mappe{
 		"", "",
 		[]Directive{
@@ -62,13 +62,49 @@ func TestFindMappedValueInRange(t *testing.T) {
 	input := 9
 	want := 11
 
-	got := FindMappedValue(mappe, input)
+	got := MapValue(mappe, input)
 	if got != want {
 		t.Errorf("Mapping within directive range incorrect. Got: %d\n", got)
 	}
 }
 
-func TestFindMappedValueOutsideRange(t *testing.T) {
+func TestMapValueAtStartOfRange(t *testing.T) {
+	mappe := Mappe{
+		"", "",
+		[]Directive{
+			Directive{14, 12, 5},
+			Directive{5, 7, 5},
+			Directive{22, 3, 4},
+		},
+	}
+	input := 22
+	want := 3
+
+	got := MapValue(mappe, input)
+	if got != want {
+		t.Errorf("Mapping at start of directive range incorrect. Got: %d\n", got)
+	}
+}
+
+func TestMapValueAtEndOfRange(t *testing.T) {
+	mappe := Mappe{
+		"", "",
+		[]Directive{
+			Directive{14, 12, 5},
+			Directive{5, 7, 5},
+			Directive{22, 3, 4},
+		},
+	}
+	input := 10
+	want := 12
+
+	got := MapValue(mappe, input)
+	if got != want {
+		t.Errorf("Mapping at end of directive range incorrect. Got: %d\n", got)
+	}
+}
+
+func TestMapValueOutsideRange(t *testing.T) {
 	mappe := Mappe{
 		"", "",
 		[]Directive{
@@ -80,7 +116,7 @@ func TestFindMappedValueOutsideRange(t *testing.T) {
 	input := 2
 	want := 2
 
-	got := FindMappedValue(mappe, input)
+	got := MapValue(mappe, input)
 	if got != want {
 		t.Errorf("Default mapping (value outside of directive ranges) incorrect. Got: %d\n", got)
 	}
@@ -110,9 +146,19 @@ func TestFindMultiplyMappedValue(t *testing.T) {
 	input := 16
 	want := 10
 
-	got := FindLocationForSeed(mapOfMappes, input)
+	got := FindMappedValue(mapOfMappes, input, "a", "c")
 	if got != want {
 		t.Errorf("Mapping through two mappes incorrect. Got: %d\n", got)
+	}
+}
+
+func TestFindLowest(t *testing.T) {
+	values := []int{123, 33, 12, 9999}
+	want := 12
+
+	got := FindLowest(values)
+	if got != want {
+		t.Errorf("Failed to find lowest value. Got: %d\n", got)
 	}
 }
 
