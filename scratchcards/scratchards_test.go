@@ -20,9 +20,39 @@ func TestParseLine(t *testing.T) {
 		t.Error("Failed to parse winning numbers")
 	}
 	if !cmp.Equal(card.myNumbers, mine) {
-		t.Error("Failed to parse winning numbers")
+		t.Error("Failed to parse my numbers")
 	}
 }
 
 // ------------------------------------------------------------
 // Part 1
+
+func TestFindScoreSingleMatch(t *testing.T) {
+	card := Card{1, []int{1, 2, 3}, []int{2, 5, 6}}
+	want := 1
+
+	got := FindScore(card)
+	if want != got {
+		t.Errorf("Got incorrect score for single winning number. Got: %d\n", got)
+	}
+}
+
+func TestFindScoreNoMatch(t *testing.T) {
+	card := Card{1, []int{1, 2, 3}, []int{12, 5, 6}}
+	want := 0
+
+	got := FindScore(card)
+	if want != got {
+		t.Errorf("Got incorrect score for no winning numbers. Got: %d\n", got)
+	}
+}
+
+func TestFindScoreMultipleMatches(t *testing.T) {
+	card := Card{1, []int{1, 2, 3}, []int{2, 3, 3, 5}}
+	want := 4
+
+	got := FindScore(card)
+	if want != got {
+		t.Errorf("Got incorrect score for multiple winning numbers. Got: %d\n", got)
+	}
+}
