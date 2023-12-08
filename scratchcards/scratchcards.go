@@ -14,6 +14,7 @@ type Card struct {
 	id int
 	winningNumbers []int
 	myNumbers []int
+	copies int
 }
 
 func parse(fileScanner *bufio.Scanner) []Card {
@@ -46,6 +47,7 @@ func ParseLine(line string) Card {
 		id,
 		parseNumberList(numberLists[0]),
 		parseNumberList(numberLists[1]),
+		1,
 	}
 }
 
@@ -69,6 +71,9 @@ func FindScore(card Card) int {
 // ------------------------------------------------------------
 // Part 2
 
+func AddCopies(cards *[]Card, currentCard Card, score int) {
+
+}
 
 // ------------------------------------------------------------
 
@@ -84,7 +89,12 @@ func main() {
 
 	var totalCardScores = 0
 	for _, c := range cards {
-		totalCardScores = totalCardScores + FindScore(c)
+		// Part 1
+		score := FindScore(c)
+		totalCardScores = totalCardScores + score
+
+		// Part 2
+		AddCopies(&cards, c, score)
 	}
 
 	fmt.Printf("Sum of all card scores: %d\n", totalCardScores)

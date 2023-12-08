@@ -20,3 +20,4 @@ On each line of `calibration.txt`, the "calibration value" for that row can be f
 ## Day 4 problem statement:
 
 1. Each card has winning numbers and your numbers, separated by `|`. A match is worth a point, with each subsequant match on a card double the points. Find the sum of points for all cards.
+2. Instead, each match copies a following card, with the number of cards copied equal to the number of matches. Copies similarly copy subsequent cards. What's the total number of cards after all copies have occurred?

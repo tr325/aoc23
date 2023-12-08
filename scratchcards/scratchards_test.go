@@ -28,7 +28,7 @@ func TestParseLine(t *testing.T) {
 // Part 1
 
 func TestFindScoreSingleMatch(t *testing.T) {
-	card := Card{1, []int{1, 2, 3}, []int{2, 5, 6}}
+	card := Card{1, []int{1, 2, 3}, []int{2, 5, 6}, 1}
 	want := 1
 
 	got := FindScore(card)
@@ -38,7 +38,7 @@ func TestFindScoreSingleMatch(t *testing.T) {
 }
 
 func TestFindScoreNoMatch(t *testing.T) {
-	card := Card{1, []int{1, 2, 3}, []int{12, 5, 6}}
+	card := Card{1, []int{1, 2, 3}, []int{12, 5, 6}, 1}
 	want := 0
 
 	got := FindScore(card)
@@ -48,7 +48,7 @@ func TestFindScoreNoMatch(t *testing.T) {
 }
 
 func TestFindScoreMultipleMatches(t *testing.T) {
-	card := Card{1, []int{1, 2, 3}, []int{2, 3, 3, 5}}
+	card := Card{1, []int{1, 2, 3}, []int{2, 3, 3, 5}, 1}
 	want := 4
 
 	got := FindScore(card)
