@@ -35,7 +35,7 @@ func TestParseMappeDirectiveLine(t *testing.T) {
 	wantDestinationStart := 12
 	wantRangeLength := 14
 
-	source, destination, length := ParseMappeDirectiveLine(line)
+	destination, source, length := ParseMappeDirectiveLine(line)
 	if source != wantSourceStart {
 		t.Errorf("Failed to parse Mappe source range start. Got: %d\n", source)
 	}

@@ -2,8 +2,10 @@ package main
 
 import (
 	"bufio"
+	"github.com/samber/lo"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -56,16 +58,37 @@ func parse(fileScanner *bufio.Scanner) ([]int, map[string]Mappe) {
 	return seeds, mapOfMappes
 }
 
+func splitOnWhitespace(list string) []string {
+	whiteSpace := regexp.MustCompile(`\s+`)
+	split := whiteSpace.Split(list, -1)
+	// Remove any stray empty string elements
+	return lo.Filter(split, func(s string, _ int) bool {
+		return s != ""
+	})
+}
+
+func parseListOfInts(list string) []int {
+	filteredList := splitOnWhitespace(list)
+	return lo.Map(filteredList, func(s string, _ int) int {
+		number, _ := strconv.Atoi(s)
+		return number
+	})
+}
+
 func ParseSeedsInputLine(line string) []int {
-	return []int{1}
+	list := strings.Replace(line, "seeds:", "", -1)
+	return parseListOfInts(list)
 }
 
 func ParseMappeTitleLine(line string) (string, string) {
-	return "a", "b"
+	lineParts := splitOnWhitespace(line)
+	mappeNames := strings.Split(lineParts[0], "-to-")
+	return mappeNames[0], mappeNames[1]
 }
 
 func ParseMappeDirectiveLine(line string) (int, int, int) {
-	return 1, 2, 3
+	nums := parseListOfInts(line)
+	return nums[0], nums[1], nums[2]
 }
 
 // ------------------------------------------------------------
