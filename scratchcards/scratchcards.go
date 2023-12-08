@@ -4,21 +4,23 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/samber/lo"
+	"math"
 	"os"
 	"regexp"
-	"strings"
 	"strconv"
+	"strings"
 )
 
 type Card struct {
-	id int
+	id             int
 	winningNumbers []int
-	myNumbers []int
-	copies int
+	myNumbers      []int
+	matches        int
+	copies         int
 }
 
-func parse(fileScanner *bufio.Scanner) []Card {
-	cards := []Card{}
+func parse(fileScanner *bufio.Scanner) []*Card {
+	cards := []*Card{}
 	for fileScanner.Scan() {
 		cards = append(cards, ParseLine(fileScanner.Text()))
 	}
@@ -37,16 +39,17 @@ func parseNumberList(list string) []int {
 	})
 }
 
-func ParseLine(line string) Card {
+func ParseLine(line string) *Card {
 	idAndGame := strings.Split(line, ":")
 	idStr := strings.Replace(idAndGame[0], "Card ", "", -1)
 	id, _ := strconv.Atoi(idStr)
 
 	numberLists := strings.Split(idAndGame[1], "|")
-	return Card{
+	return &Card{
 		id,
 		parseNumberList(numberLists[0]),
 		parseNumberList(numberLists[1]),
+		0,
 		1,
 	}
 }
@@ -54,25 +57,26 @@ func ParseLine(line string) Card {
 // ------------------------------------------------------------
 // Part 1
 
-func FindScore(card Card) int {
-	var score = 0
-	for _, n := range card.myNumbers {
-		if -1 != lo.IndexOf(card.winningNumbers, n) {
-			if score == 0 {
-				score = 1
-			} else {
-				score = score * 2
-			}
-		}
+func FindScore(card *Card) int {
+	card.matches = len(lo.Intersect(card.winningNumbers, card.myNumbers))
+
+	if card.matches > 0 {
+		return int(math.Pow(2, float64(card.matches-1)))
 	}
-	return score
+	return 0
 }
 
 // ------------------------------------------------------------
 // Part 2
 
-func AddCopies(cards *[]Card, currentCard Card, score int) {
-
+func AddCopies(cards []*Card, currentIndex int) {
+	currentCard := *cards[currentIndex]
+	for i := 1; i <= currentCard.matches; i++ {
+		copiedCard := *cards[currentIndex+i]
+		copiedCard.copies = copiedCard.copies + currentCard.copies
+		// Need to reassign after modifying when working with slices of references
+		cards[currentIndex+i] = &copiedCard
+	}
 }
 
 // ------------------------------------------------------------
@@ -88,14 +92,22 @@ func main() {
 	cards := parse(fileScanner)
 
 	var totalCardScores = 0
-	for _, c := range cards {
+	for i, c := range cards {
 		// Part 1
 		score := FindScore(c)
 		totalCardScores = totalCardScores + score
 
 		// Part 2
-		AddCopies(&cards, c, score)
+		if score != 0 {
+			AddCopies(cards, i)
+		}
+	}
+	var totalCards = 0
+	for _, c := range cards {
+		card := *c
+		totalCards = totalCards + card.copies
 	}
 
 	fmt.Printf("Sum of all card scores: %d\n", totalCardScores)
+	fmt.Printf("Total number of cards: %d\n", totalCards)
 }
