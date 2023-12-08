@@ -21,3 +21,7 @@ On each line of `calibration.txt`, the "calibration value" for that row can be f
 
 1. Each card has winning numbers and your numbers, separated by `|`. A match is worth a point, with each subsequant match on a card double the points. Find the sum of points for all cards.
 2. Instead, each match copies a following card, with the number of cards copied equal to the number of matches. Copies similarly copy subsequent cards. What's the total number of cards after all copies have occurred?
+
+## Day 5 problem statement:
+
+1. Each "mappe" includes a directive of how to translate source value (column 1) to destination value (column zero), valid for a range (column 2) of source and desination values. Going through each of these mappes in order, find the lowest value output of the final mappe, given the inputs provided.
